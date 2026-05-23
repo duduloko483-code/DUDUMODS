@@ -2,185 +2,92 @@
 
 clear
 
-# =========================================
-# CORES
-# =========================================
 RED='\033[1;31m'
 GREEN='\033[1;32m'
 YELLOW='\033[1;33m'
 CYAN='\033[1;36m'
-WHITE='\033[1;37m'
 NC='\033[0m'
 
-# =========================================
-# BANNER
-# =========================================
-
 echo -e "${CYAN}"
-echo "██╗  ██╗██╗   ██╗██████╗ ██╗   ██╗"
-echo "██║ ██╔╝██║   ██║██╔══██╗██║   ██║"
-echo "█████╔╝ ██║   ██║██████╔╝██║   ██║"
-echo "██╔═██╗ ██║   ██║██╔══██╗██║   ██║"
-echo "██║  ██╗╚██████╔╝██║  ██║╚██████╔╝"
-echo "╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ "
-echo ""
-echo "        DUDU MODS SCANNER"
+echo "======================================="
+echo "         DUDU MODS SCANNER"
+echo "======================================="
 echo -e "${NC}"
 
 sleep 1
-
-# =========================================
-# LOADING
-# =========================================
-
-echo -e "${GREEN}[✓] Identificando aparelho e ambiente...${NC}"
-sleep 1
-
-echo -e "${GREEN}[✓] Verificando integridade de logs...${NC}"
-sleep 1
-
-echo -e "${GREEN}[✓] Verificando root e ferramentas suspeitas...${NC}"
-sleep 1
-
-echo -e "${GREEN}[✓] Verificando horário e uptime...${NC}"
-sleep 1
-
-echo -e "${GREEN}[✓] Verificando ambiente e clipboard...${NC}"
-sleep 1
-
-echo -e "${GREEN}[✓] Analisando MReplays...${NC}"
-sleep 1
-
-echo -e "${GREEN}[✓] Checando silenciamento de logcat...${NC}"
-sleep 1
-
-echo -e "${GREEN}[✓] Checando manipulação de bateria...${NC}"
-sleep 1
-
-echo -e "${GREEN}[✓] Checando bypass de wallhack/holograma...${NC}"
-sleep 1
-
-echo -e "${GREEN}[✓] Checando shaders...${NC}"
-sleep 1
-
-echo -e "${GREEN}[✓] Checando OBB...${NC}"
-sleep 1
-
-echo -e "${GREEN}[✓] Checando depuração Wi-Fi...${NC}"
-sleep 1
-
-# =========================================
-# DEPURAÇÃO WIFI
-# =========================================
-
-wifi_debug=0
-
-if settings get global adb_wifi_enabled 2>/dev/null | grep -q "1"; then
-    wifi_debug=1
-fi
-
-# =========================================
-# PASTA REPLAY
-# =========================================
-
-BASE="/storage/emulated/0/Android/data/com.dts.freefireth/files/MReplays"
-
-latest_bin=$(ls -1 "$BASE"/*.bin 2>/dev/null | tail -1)
-
-folder_alert=0
-bin_alert=0
-
-if [ -f "$latest_bin" ]; then
-
-folder_modify=$(stat -c %y "$BASE")
-folder_change=$(stat -c %z "$BASE")
-
-bin_access=$(stat -c %x "$latest_bin")
-bin_modify=$(stat -c %y "$latest_bin")
-bin_change=$(stat -c %z "$latest_bin")
-
-if [ "$folder_modify" != "$bin_modify" ] || [ "$folder_change" != "$bin_change" ]; then
-    folder_alert=1
-fi
-
-if [ "$bin_access" != "$bin_modify" ] || [ "$bin_modify" != "$bin_change" ]; then
-    bin_alert=1
-fi
-
-fi
-
-# =========================================
-# STATUS
-# =========================================
 
 suspeito=0
 
-if [ $folder_alert -eq 1 ] || [ $bin_alert -eq 1 ] || [ $wifi_debug -eq 1 ]; then
+echo -e "${YELLOW}[•] Verificando root...${NC}"
+
+if command -v su >/dev/null 2>&1; then
+    echo -e "${RED}[ROOT DETECTADO]${NC}"
     suspeito=1
-fi
-
-clear
-
-echo -e "${CYAN}"
-echo "╔══════════════════════════════════════╗"
-echo "║          DUDU MODS SCANNER          ║"
-echo "╚══════════════════════════════════════╝"
-echo -e "${NC}"
-
-echo ""
-
-if [ $suspeito -eq 1 ]; then
-    echo -e "${RED}"
-    echo "███████╗██╗   ██╗███████╗██████╗ ███████╗██╗████████╗ ██████╗ "
-    echo "██╔════╝██║   ██║██╔════╝██╔══██╗██╔════╝██║╚══██╔══╝██╔═══██╗"
-    echo "███████╗██║   ██║███████╗██████╔╝█████╗  ██║   ██║   ██║   ██║"
-    echo "╚════██║██║   ██║╚════██║██╔═══╝ ██╔══╝  ██║   ██║   ██║   ██║"
-    echo "███████║╚██████╔╝███████║██║     ███████╗██║   ██║   ╚██████╔╝"
-    echo "╚══════╝ ╚═════╝ ╚══════╝╚═╝     ╚══════╝╚═╝   ╚═╝    ╚═════╝ "
-    echo -e "${NC}"
 else
-    echo -e "${GREEN}"
-    echo "██╗     ██╗███╗   ███╗██████╗  ██████╗ "
-    echo "██║     ██║████╗ ████║██╔══██╗██╔═══██╗"
-    echo "██║     ██║██╔████╔██║██████╔╝██║   ██║"
-    echo "██║     ██║██║╚██╔╝██║██╔═══╝ ██║   ██║"
-    echo "███████╗██║██║ ╚═╝ ██║██║     ╚██████╔╝"
-    echo "╚══════╝╚═╝╚═╝     ╚═╝╚═╝      ╚═════╝ "
-    echo -e "${NC}"
+    echo -e "${GREEN}[SEM ROOT]${NC}"
 fi
 
 echo ""
-echo "================= RESULTADO ================="
-echo ""
+echo -e "${YELLOW}[•] Verificando depuração Wi-Fi...${NC}"
 
-if [ $wifi_debug -eq 1 ]; then
-    echo -e "${RED}🚨 DEPURACAO WIFI ATIVADA 🚨${NC}"
-fi
+wifi=$(settings get global adb_wifi_enabled 2>/dev/null)
 
-if [ $folder_alert -eq 1 ]; then
-    echo -e "${RED}🚨 DIVERGENCIA NA PASTA MREPLAYS 🚨${NC}"
-fi
-
-if [ $bin_alert -eq 1 ]; then
-    echo -e "${RED}🚨 BIN MODIFICADO / ACESSADO 🚨${NC}"
-fi
-
-if [ $suspeito -eq 0 ]; then
-    echo -e "${GREEN}✅ NENHUMA INCONSISTENCIA DETECTADA ✅${NC}"
+if [ "$wifi" = "1" ]; then
+    echo -e "${RED}[DEPURAÇÃO WIFI ATIVA]${NC}"
+    suspeito=1
+else
+    echo -e "${GREEN}[DEPURAÇÃO WIFI DESATIVADA]${NC}"
 fi
 
 echo ""
-echo "================= INFO ================="
+echo -e "${YELLOW}[•] Dispositivos ADB:${NC}"
+adb devices 2>/dev/null
+
 echo ""
+echo -e "${YELLOW}[•] Verificando apps suspeitos...${NC}"
+
+apps="
+com.cheatengine
+com.luckypatcher
+org.sbgamehacker
+"
+
+for pkg in $apps; do
+    if pm list packages | grep -q "$pkg"; then
+        echo -e "${RED}[APP SUSPEITO] $pkg${NC}"
+        suspeito=1
+    fi
+done
+
+echo ""
+echo -e "${YELLOW}[•] Verificando pasta MReplays...${NC}"
+
+BASE="/storage/emulated/0/Android/data/com.dts.freefireth/files/MReplays"
+
+if [ -d "$BASE" ]; then
+    echo -e "${GREEN}[PASTA ENCONTRADA]${NC}"
+else
+    echo -e "${RED}[PASTA NÃO ENCONTRADA]${NC}"
+fi
+
+echo ""
+echo -e "${YELLOW}[•] Informações do aparelho${NC}"
 
 echo "ANDROID : $(getprop ro.build.version.release)"
 echo "MODELO  : $(getprop ro.product.model)"
 echo "MARCA   : $(getprop ro.product.brand)"
 
 echo ""
-echo "================= DISPOSITIVOS ADB ================="
-adb devices 2>/dev/null
+
+if [ $suspeito -eq 1 ]; then
+    echo -e "${RED}"
+    echo "======== STATUS: SUSPEITO ========"
+    echo -e "${NC}"
+else
+    echo -e "${GREEN}"
+    echo "========== STATUS: LIMPO =========="
+    echo -e "${NC}"
+fi
 
 echo ""
-echo "================= FIM DO SCAN ================="
-echo ""
+echo "============== FIM =============="
