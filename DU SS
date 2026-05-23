@@ -1,0 +1,60 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+clear
+
+echo "=================================="
+echo "      DUDUMODS SCANNER"
+echo "=================================="
+
+echo ""
+echo "[1] Verificando ROOT..."
+if command -v su >/dev/null 2>&1; then
+    echo "[ALERTA] ROOT detectado"
+else
+    echo "[OK] Sem root"
+fi
+
+echo ""
+echo "[2] Verificando ADB..."
+settings get global adb_enabled
+
+echo ""
+echo "[3] Verificando apps suspeitos..."
+
+pm list packages | grep -Ei \
+"gameguardian|cheat|hack|lucky|virtual|parallel|clone|inject|script"
+
+echo ""
+echo "[4] Verificando overlays..."
+dumpsys window | grep -i overlay
+
+echo ""
+echo "[5] Verificando acessibilidade..."
+settings get secure enabled_accessibility_services
+
+echo ""
+echo "[6] Verificando processos..."
+ps -A | grep -Ei \
+"frida|cheat|inject|hack|gg"
+
+echo ""
+echo "[7] Verificando pasta MReplays..."
+
+BASE="/storage/emulated/0/Android/data/com.dts.freefireth/files/MReplays"
+
+if [ -d "$BASE" ]; then
+    echo "[OK] Pasta encontrada"
+
+    latest=$(ls -t "$BASE" 2>/dev/null | head -1)
+
+    echo "Último replay:"
+    echo "$latest"
+
+else
+    echo "[ERRO] Pasta não encontrada"
+fi
+
+echo ""
+echo "=================================="
+echo "FINALIZADO"
+echo "=================================="
