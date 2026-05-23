@@ -1,1 +1,71 @@
+#!/data/data/com.termux/files/usr/bin/bash
 
+clear
+
+echo "██████╗ ██╗   ██╗██████╗ ██╗   ██╗███╗   ███╗ ██████╗ "
+echo "██╔══██╗██║   ██║██╔══██╗██║   ██║████╗ ████║██╔═══██╗"
+echo "██║  ██║██║   ██║██║  ██║██║   ██║██╔████╔██║██║   ██║"
+echo "██║  ██║██║   ██║██║  ██║██║   ██║██║╚██╔╝██║██║   ██║"
+echo "██████╔╝╚██████╔╝██████╔╝╚██████╔╝██║ ╚═╝ ██║╚██████╔╝"
+echo "╚═════╝  ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝     ╚═╝ ╚═════╝ "
+
+echo ""
+echo "🚨 DUDU PEGADOR DE PASSADOR 🚨"
+echo ""
+
+BASE="/storage/emulated/0/Android/data/com.dts.freefireth/files/MReplays"
+
+latest_bin=$(ls -1 "$BASE"/*.bin 2>/dev/null | tail -1)
+
+if [ ! -f "$latest_bin" ]; then
+    echo "BIN NAO ENCONTRADO"
+    exit
+fi
+
+folder_modify=$(stat -c %y "$BASE")
+folder_change=$(stat -c %z "$BASE")
+
+bin_access=$(stat -c %x "$latest_bin")
+bin_modify=$(stat -c %y "$latest_bin")
+bin_change=$(stat -c %z "$latest_bin")
+
+folder_alert=0
+bin_alert=0
+
+if [ "$folder_modify" != "$bin_modify" ] || [ "$folder_change" != "$bin_change" ]; then
+    folder_alert=1
+fi
+
+if [ "$bin_access" != "$bin_modify" ] || [ "$bin_modify" != "$bin_change" ]; then
+    bin_alert=1
+fi
+
+echo ""
+echo "================ RESULTADO ================"
+echo ""
+
+if [ $folder_alert -eq 1 ] || [ $bin_alert -eq 1 ]; then
+
+echo "███████╗██╗   ██╗███████╗██████╗ ███████╗██╗████████╗ ██████╗ "
+echo "██╔════╝██║   ██║██╔════╝██╔══██╗██╔════╝██║╚══██╔══╝██╔═══██╗"
+echo "███████╗██║   ██║███████╗██████╔╝█████╗  ██║   ██║   ██║   ██║"
+echo "╚════██║██║   ██║╚════██║██╔═══╝ ██╔══╝  ██║   ██║   ██║   ██║"
+echo "███████║╚██████╔╝███████║██║     ███████╗██║   ██║   ╚██████╔╝"
+echo "╚══════╝ ╚═════╝ ╚══════╝╚═╝     ╚══════╝╚═╝   ╚═╝    ╚═════╝ "
+
+echo ""
+echo "🚨 PASSADOR DETECTADO 🚨"
+
+else
+
+echo "██╗     ██╗███╗   ███╗██████╗  ██████╗ "
+echo "██║     ██║████╗ ████║██╔══██╗██╔═══██╗"
+echo "██║     ██║██╔████╔██║██████╔╝██║   ██║"
+echo "██║     ██║██║╚██╔╝██║██╔═══╝ ██║   ██║"
+echo "███████╗██║██║ ╚═╝ ██║██║     ╚██████╔╝"
+echo "╚══════╝╚═╝╚═╝     ╚═╝╚═╝      ╚═════╝ "
+
+echo ""
+echo "✅ REPLAY LIMPO ✅"
+
+fi
